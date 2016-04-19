@@ -39,7 +39,8 @@ public class GameScreen extends JPanel {
 	
 	private JLabel shipsValueLabel;
 	private JLabel destroyedValueLabel;
-
+	private JLabel pointsValueLabel;
+	
 	private Random rand;
 	
 	private Font originalFont;
@@ -50,6 +51,11 @@ public class GameScreen extends JPanel {
 	private SoundManager soundMan;
 	private GraphicsManager graphicsMan;
 	private GameLogic gameLogic;
+	
+//	int level = 1;  //for lvl number
+
+
+	
 
 	/**
 	 * This method initializes 
@@ -105,7 +111,7 @@ public class GameScreen extends JPanel {
 		}
 		
 		// erase screen
-		g2d.setPaint(Color.BLACK);
+		g2d.setPaint(new Color(0x05265));
 		g2d.fillRect(0, 0, getSize().width, getSize().height);
 
 		// draw 50 random stars
@@ -148,7 +154,7 @@ public class GameScreen extends JPanel {
 				graphicsMan.drawAsteroid(asteroid, g2d, this);
 			}
 			else{
-				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width), 0);
+				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width),0);
 			}
 		}
 		else{
@@ -183,6 +189,8 @@ public class GameScreen extends JPanel {
 			if(asteroid.intersects(bullet)){
 				// increase asteroids destroyed count
 				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 1);
+				
+				status.setScore(status.getScore() + 100);
 
 				// "remove" asteroid
 		        asteroidExplosion = new Rectangle(
@@ -226,6 +234,7 @@ public class GameScreen extends JPanel {
 		if(asteroid.intersects(ship)){
 			// decrease number of ships left
 			status.setShipsLeft(status.getShipsLeft() - 1);
+			status.setScore(status.getScore() - 50);
 			
 			status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 1);
 
@@ -260,6 +269,9 @@ public class GameScreen extends JPanel {
 		
 		// update ships left label
 		shipsValueLabel.setText(Integer.toString(status.getShipsLeft()));
+		
+		// update score label
+		pointsValueLabel.setText(Integer.toString(status.getScore()));
 	}
 
 	/**
@@ -300,6 +312,22 @@ public class GameScreen extends JPanel {
 		g2d.setPaint(Color.WHITE);
 		g2d.drawString(readyStr, strX, strY);
 	}
+	
+	/**
+	 * Draws each new level's message.
+	 */
+//	private void drawNextLevelMessage() {
+//		
+//		String levelStr = "Level " + level++ + "!";
+//		g2d.setFont(originalFont.deriveFont(originalFont.getSize2D() + 1));
+//		FontMetrics fm = g2d.getFontMetrics();
+//		int ascent = fm.getAscent();
+//		int strWidth = fm.stringWidth(levelStr);
+//		int strX = (this.getWidth() - strWidth)/2;
+//		int strY = (this.getHeight() + ascent)/2;
+//		g2d.setPaint(Color.WHITE);
+//		g2d.drawString(levelStr, strX, strY);
+//	}
 
 	/**
 	 * Draws the specified number of stars randomly on the game screen.
@@ -410,5 +438,9 @@ public class GameScreen extends JPanel {
 	 */
 	public void setShipsValueLabel(JLabel shipsValueLabel) {
 		this.shipsValueLabel = shipsValueLabel;
+	}
+
+	public void setPointsValueLabel(JLabel pointsValueLabel) {
+		this.pointsValueLabel = pointsValueLabel;
 	}
 }
