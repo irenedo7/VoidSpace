@@ -14,6 +14,7 @@ public class GameStatus {
 	private boolean newAsteroid;
 	private long asteroidsDestroyed = 0;
 	private int shipsLeft;
+	private int score = 0;
 	
 	public GameStatus(){
 		
@@ -102,5 +103,17 @@ public class GameStatus {
 	public synchronized void setShipsLeft(int shipsLeft) {
 		this.shipsLeft = shipsLeft;
 	}
+	
+	/**
+	 * Returns current score.
+	 * @return current score
+	 */
+	public synchronized int getScore() {
+		return score;
+	} 
+	
+	public synchronized void setScore(int score) {
+		this.score = score;
+	} 
 
 }
