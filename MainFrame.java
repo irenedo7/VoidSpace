@@ -1,4 +1,5 @@
 package rbadia.voidspace.main;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,6 +26,9 @@ public class MainFrame extends JFrame {
 
 	private JLabel shipsLabel;
 	private JLabel shipsValueLabel;
+	
+	private JLabel pointsLabel;
+	private JLabel pointsValueLabel;
 	
 	/**
 	 * This is the default constructor
@@ -59,6 +63,18 @@ public class MainFrame extends JFrame {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			GridBagConstraints gridBagConstraints6 = new GridBagConstraints();
+			gridBagConstraints6.insets = new Insets(0, 0, 0, 0);
+			gridBagConstraints6.gridy = 1;
+			gridBagConstraints6.anchor = GridBagConstraints.WEST;
+			gridBagConstraints6.weightx = 1.0D;
+			gridBagConstraints6.gridx = 5;
+			GridBagConstraints gridBagConstraints5 = new GridBagConstraints();
+			gridBagConstraints5.insets = new Insets(0, 0, 0, 0);
+			gridBagConstraints5.gridy = 1;
+			gridBagConstraints5.anchor = GridBagConstraints.EAST;
+			gridBagConstraints5.weightx = 1.0D;
+			gridBagConstraints5.gridx = 4;
 			GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
 			gridBagConstraints4.insets = new Insets(0, 0, 0, 0);
 			gridBagConstraints4.gridy = 1;
@@ -88,18 +104,24 @@ public class MainFrame extends JFrame {
 			gridBagConstraints.gridx = 0;
 			gridBagConstraints.gridy = 0;
 			gridBagConstraints.fill = GridBagConstraints.NONE;
-			gridBagConstraints.gridwidth = 4;
+			gridBagConstraints.gridwidth = 8;
 			shipsLabel = new JLabel("Ships Left: ");
 			shipsValueLabel = new JLabel("3");
 			destroyedLabel = new JLabel("Asteroids Destroyed: ");
 			destroyedValueLabel = new JLabel("0");
+			pointsLabel = new JLabel("Score: ");	
+			pointsValueLabel = new JLabel("0");	
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new GridBagLayout());
+			jContentPane.setBackground(new Color(0x78943));
 			jContentPane.add(getGameScreen(), gridBagConstraints);
 			jContentPane.add(shipsLabel, gridBagConstraints1);
 			jContentPane.add(shipsValueLabel, gridBagConstraints2);
 			jContentPane.add(destroyedLabel, gridBagConstraints3);
 			jContentPane.add(destroyedValueLabel, gridBagConstraints4);
+			jContentPane.add(pointsLabel, gridBagConstraints5);	
+			jContentPane.add(pointsValueLabel, gridBagConstraints6); 
+
 		}
 		return jContentPane;
 	}
@@ -114,6 +136,7 @@ public class MainFrame extends JFrame {
 			gameScreen = new GameScreen();
 			gameScreen.setShipsValueLabel(shipsValueLabel);
 			gameScreen.setDestroyedValueLabel(destroyedValueLabel);
+			gameScreen.setPointsValueLabel(pointsValueLabel);
 		}
 		return gameScreen;
 	}
