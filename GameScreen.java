@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import rbadia.voidspace.graphics.GraphicsManager;
 import rbadia.voidspace.model.Asteroid;
 import rbadia.voidspace.model.Bullet;
+import rbadia.voidspace.model.EnemyShip;
 import rbadia.voidspace.model.Ship;
 import rbadia.voidspace.sounds.SoundManager;
 
@@ -40,7 +41,8 @@ public class GameScreen extends JPanel {
 	private JLabel shipsValueLabel;
 	private JLabel destroyedValueLabel;
 	private JLabel pointsValueLabel;
-	
+	private JLabel levelNumber;
+
 	private Random rand;
 	
 	private Font originalFont;
@@ -51,7 +53,7 @@ public class GameScreen extends JPanel {
 	private SoundManager soundMan;
 	private GraphicsManager graphicsMan;
 	private GameLogic gameLogic;
-	
+	private int trajectory;
 //	int level = 1;  //for lvl number
 
 
@@ -72,7 +74,7 @@ public class GameScreen extends JPanel {
 		graphicsMan = new GraphicsManager();
 		
 		// init back buffer image
-		backBuffer = new BufferedImage(500, 400, BufferedImage.TYPE_INT_RGB);
+		backBuffer = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
 		g2d = backBuffer.createGraphics();
 	}
 
@@ -81,8 +83,8 @@ public class GameScreen extends JPanel {
 	 */
 	private void initialize() {
 		// set panel properties
-        this.setSize(new Dimension(500, 400));
-        this.setPreferredSize(new Dimension(500, 400));
+        this.setSize(new Dimension(800, 600));
+        this.setPreferredSize(new Dimension(800, 600));
         this.setBackground(Color.BLACK);
 	}
 
@@ -103,6 +105,7 @@ public class GameScreen extends JPanel {
 		Ship ship = gameLogic.getShip();
 		Asteroid asteroid = gameLogic.getAsteroid();
 		List<Bullet> bullets = gameLogic.getBullets();
+		EnemyShip enemy = gameLogic.getEnemyShip();
 		
 		// set orignal font - for later use
 		if(this.originalFont == null){
@@ -148,64 +151,112 @@ public class GameScreen extends JPanel {
 
 		// draw asteroid
 		
-		Random generator=new Random();
-		int num=generator.nextInt(2);
+		
 		
 		
 		if(!status.isNewAsteroid()){
 			// draw the asteroid until it reaches the bottom of the screen
-			
+
 			//Switch para elegir las trayectorias random
-			
-			switch(rand.nextInt(3)){
+
+			switch(trajectory){
 			
 			case 0:
-				
-				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
-					asteroid.translate(asteroid.getSpeed()-5, asteroid.getSpeed());
-					graphicsMan.drawAsteroid(asteroid, g2d, this);
-					break;
-				}
-					asteroid.setLocation(getWidth()/2-100+rand.nextInt(getWidth()/2),0);
-					break;
-				
-			case 1:
-				
-				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
-					asteroid.translate(asteroid.getSpeed()-3,4); //asteroid.getSpeed());
-					graphicsMan.drawAsteroid(asteroid, g2d, this);
-					break;
-				}
-				
-					asteroid.setLocation(rand.nextInt((getWidth()/2)+50),0);
-					break;
-			
-				
-			case 2:
-				
+
 				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
 					asteroid.translate(0, asteroid.getSpeed());
 					graphicsMan.drawAsteroid(asteroid, g2d, this);
 					break;
 				}
-					asteroid.setLocation(rand.nextInt(getWidth()-asteroid.width),0);
-					break;
+				trajectory = rand.nextInt(5);
+
+				asteroid.setLocation(rand.nextInt(getWidth()-asteroid.width),0);
+				break;
 				
+			case 1:
+
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(asteroid.getSpeed()-5, asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+				trajectory = rand.nextInt(5);
+
+				asteroid.setLocation(getWidth()/4 + rand.nextInt(3*getWidth()/4),0);
+				break;
+				
+
+			case 2:
+
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(asteroid.getSpeed()-3,asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+				trajectory = rand.nextInt(5);
+
+				asteroid.setLocation(rand.nextInt((3*getWidth()/4)),0);
+				break;
+
+			case 3:
+
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(asteroid.getSpeed()-6, asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+				trajectory = rand.nextInt(5);
+
+				asteroid.setLocation((getWidth()/2)-asteroid.width+rand.nextInt(getWidth()/2),0);
+				break;
+
+			case 4:
+
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(asteroid.getSpeed()-2, asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+				trajectory = rand.nextInt(5);
+
+				asteroid.setLocation(rand.nextInt((getWidth()/2)+asteroid.width),0);
+				break;
 			}
-			
+
 		}
 		
 		else{
+			
 			long currentTime = System.currentTimeMillis();
 			if((currentTime - lastAsteroidTime) > NEW_ASTEROID_DELAY){
 				// draw a new asteroid
+				
+				trajectory = rand.nextInt(5);
+				
 				lastAsteroidTime = currentTime;
 				status.setNewAsteroid(false);
-				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width), 0);
+				
+					if(trajectory==0){						
+						asteroid.setLocation(rand.nextInt(getWidth()-asteroid.width),0);
+						
+					}else if(trajectory==1){
+						asteroid.setLocation(getWidth()/4 + rand.nextInt(3*getWidth()/4),0);
+
+					}else if(trajectory==2){
+						asteroid.setLocation(rand.nextInt((3*getWidth()/4)),0);
+
+					}else if(trajectory==3){
+						asteroid.setLocation((getWidth()/2)-asteroid.width+rand.nextInt(getWidth()/2),0);
+					}
+					asteroid.setLocation(rand.nextInt((getWidth()/2)+asteroid.width),0);
+					
+				
+				//asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width), 0);
 			}
 			else{
 				// draw explosion
 				graphicsMan.drawAsteroidExplosion(asteroidExplosion, g2d, this);
+
 			}
 		}
 		
@@ -253,6 +304,7 @@ public class GameScreen extends JPanel {
 		if(!status.isNewShip()){
 			// draw it in its current location
 			graphicsMan.drawShip(ship, g2d, this);
+			graphicsMan.drawEnemyShip(enemy, g2d, this);
 		}
 		else{
 			// draw a new one
@@ -309,7 +361,7 @@ public class GameScreen extends JPanel {
 		shipsValueLabel.setText(Integer.toString(status.getShipsLeft()));
 		
 		// update score label
-		pointsValueLabel.setText(Integer.toString(status.getScore()));
+		pointsValueLabel.setText(Long.toString(status.getScore()));
 	}
 
 	/**
@@ -480,5 +532,8 @@ public class GameScreen extends JPanel {
 
 	public void setPointsValueLabel(JLabel pointsValueLabel) {
 		this.pointsValueLabel = pointsValueLabel;
+	}
+	public void setLevelNumberLabel(JLabel levelNumber) {
+		this.levelNumber = levelNumber;
 	}
 }
