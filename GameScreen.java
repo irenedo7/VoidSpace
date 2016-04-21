@@ -39,7 +39,8 @@ public class GameScreen extends JPanel {
 	
 	private JLabel shipsValueLabel;
 	private JLabel destroyedValueLabel;
-
+	private JLabel pointsValueLabel;
+	
 	private Random rand;
 	
 	private Font originalFont;
@@ -50,6 +51,11 @@ public class GameScreen extends JPanel {
 	private SoundManager soundMan;
 	private GraphicsManager graphicsMan;
 	private GameLogic gameLogic;
+	
+//	int level = 1;  //for lvl number
+
+
+	
 
 	/**
 	 * This method initializes 
@@ -105,7 +111,7 @@ public class GameScreen extends JPanel {
 		}
 		
 		// erase screen
-		g2d.setPaint(Color.BLACK);
+		g2d.setPaint(new Color(0x05265));
 		g2d.fillRect(0, 0, getSize().width, getSize().height);
 
 		// draw 50 random stars
@@ -141,16 +147,54 @@ public class GameScreen extends JPanel {
 		}
 
 		// draw asteroid
+		
+		Random generator=new Random();
+		int num=generator.nextInt(2);
+		
+		
 		if(!status.isNewAsteroid()){
 			// draw the asteroid until it reaches the bottom of the screen
-			if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
-				asteroid.translate(0, asteroid.getSpeed());
-				graphicsMan.drawAsteroid(asteroid, g2d, this);
+			
+			//Switch para elegir las trayectorias random
+			
+			switch(rand.nextInt(3)){
+			
+			case 0:
+				
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(asteroid.getSpeed()-5, asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+					asteroid.setLocation(getWidth()/2-100+rand.nextInt(getWidth()/2),0);
+					break;
+				
+			case 1:
+				
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(asteroid.getSpeed()-3,4); //asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+				
+					asteroid.setLocation(rand.nextInt((getWidth()/2)+50),0);
+					break;
+			
+				
+			case 2:
+				
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(0, asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+					asteroid.setLocation(rand.nextInt(getWidth()-asteroid.width),0);
+					break;
+				
 			}
-			else{
-				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width), 0);
-			}
+			
 		}
+		
 		else{
 			long currentTime = System.currentTimeMillis();
 			if((currentTime - lastAsteroidTime) > NEW_ASTEROID_DELAY){
@@ -183,6 +227,8 @@ public class GameScreen extends JPanel {
 			if(asteroid.intersects(bullet)){
 				// increase asteroids destroyed count
 				status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 1);
+				
+				status.setScore(status.getScore() + 100);
 
 				// "remove" asteroid
 		        asteroidExplosion = new Rectangle(
@@ -226,6 +272,7 @@ public class GameScreen extends JPanel {
 		if(asteroid.intersects(ship)){
 			// decrease number of ships left
 			status.setShipsLeft(status.getShipsLeft() - 1);
+			status.setScore(status.getScore() - 50);
 			
 			status.setAsteroidsDestroyed(status.getAsteroidsDestroyed() + 1);
 
@@ -260,6 +307,9 @@ public class GameScreen extends JPanel {
 		
 		// update ships left label
 		shipsValueLabel.setText(Integer.toString(status.getShipsLeft()));
+		
+		// update score label
+		pointsValueLabel.setText(Integer.toString(status.getScore()));
 	}
 
 	/**
@@ -300,6 +350,22 @@ public class GameScreen extends JPanel {
 		g2d.setPaint(Color.WHITE);
 		g2d.drawString(readyStr, strX, strY);
 	}
+	
+	/**
+	 * Draws each new level's message.
+	 */
+//	private void drawNextLevelMessage() {
+//		
+//		String levelStr = "Level " + level++ + "!";
+//		g2d.setFont(originalFont.deriveFont(originalFont.getSize2D() + 1));
+//		FontMetrics fm = g2d.getFontMetrics();
+//		int ascent = fm.getAscent();
+//		int strWidth = fm.stringWidth(levelStr);
+//		int strX = (this.getWidth() - strWidth)/2;
+//		int strY = (this.getHeight() + ascent)/2;
+//		g2d.setPaint(Color.WHITE);
+//		g2d.drawString(levelStr, strX, strY);
+//	}
 
 	/**
 	 * Draws the specified number of stars randomly on the game screen.
@@ -410,5 +476,9 @@ public class GameScreen extends JPanel {
 	 */
 	public void setShipsValueLabel(JLabel shipsValueLabel) {
 		this.shipsValueLabel = shipsValueLabel;
+	}
+
+	public void setPointsValueLabel(JLabel pointsValueLabel) {
+		this.pointsValueLabel = pointsValueLabel;
 	}
 }
