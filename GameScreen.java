@@ -147,16 +147,54 @@ public class GameScreen extends JPanel {
 		}
 
 		// draw asteroid
+		
+		Random generator=new Random();
+		int num=generator.nextInt(2);
+		
+		
 		if(!status.isNewAsteroid()){
 			// draw the asteroid until it reaches the bottom of the screen
-			if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
-				asteroid.translate(0, asteroid.getSpeed());
-				graphicsMan.drawAsteroid(asteroid, g2d, this);
+			
+			//Switch para elegir las trayectorias random
+			
+			switch(rand.nextInt(3)){
+			
+			case 0:
+				
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(asteroid.getSpeed()-5, asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+					asteroid.setLocation(getWidth()/2-100+rand.nextInt(getWidth()/2),0);
+					break;
+				
+			case 1:
+				
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(asteroid.getSpeed()-3,4); //asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+				
+					asteroid.setLocation(rand.nextInt((getWidth()/2)+50),0);
+					break;
+			
+				
+			case 2:
+				
+				if(asteroid.getY() + asteroid.getSpeed() < this.getHeight()){
+					asteroid.translate(0, asteroid.getSpeed());
+					graphicsMan.drawAsteroid(asteroid, g2d, this);
+					break;
+				}
+					asteroid.setLocation(rand.nextInt(getWidth()-asteroid.width),0);
+					break;
+				
 			}
-			else{
-				asteroid.setLocation(rand.nextInt(getWidth() - asteroid.width),0);
-			}
+			
 		}
+		
 		else{
 			long currentTime = System.currentTimeMillis();
 			if((currentTime - lastAsteroidTime) > NEW_ASTEROID_DELAY){
